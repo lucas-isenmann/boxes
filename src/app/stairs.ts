@@ -222,7 +222,7 @@ function auxComputeIC(stairs: Array<Stair>, clique: Set<number>, cliqueNeighbors
 
 }
 
-export function computeIntersectionComplex(stairs: Array<Stair>){
+export function computeIntersectionComplex(stairs: Array<Stair>): Set<Set<number>>{
 
     const neighbors = new Set<number>();
     for (let j = 0 ; j < stairs.length; j ++){
@@ -260,6 +260,32 @@ export function isPacking(stairs: Array<Stair>): boolean{
     }
     return true;
 }
+
+
+export function isInGenPosition(stairs: Array<Stair>): undefined | [number, number, string]  {
+    for (let i = 0 ; i < stairs.length; i ++){
+        const stair1 = stairs[i];
+        for (let j = i+1; j < stairs.length; j ++){
+            const stair2 = stairs[j];
+            if (stair1.c.x == stair2.c.x ){
+                return [i,j, "x"];
+            }
+            if (stair1.c.y == stair2.c.y){
+                return [i,j, "y"];
+            }
+            if (stair1.c.z == stair2.c.z){
+                return [i,j, "z"];
+            }
+        }
+    }
+    return undefined;
+}
+
+
+
+
+
+
 
 
 export function checkContactDimension(stairs: Array<Stair>): undefined | Array<number>{

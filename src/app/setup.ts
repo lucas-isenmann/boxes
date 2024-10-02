@@ -1,7 +1,8 @@
 import { dushnikMillerDim } from 'representations';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { checkContactDimension, computeIntersectionComplex, isPacking, Stair } from './stairs';
+import { isHelly } from './complex';
+import { checkContactDimension, computeIntersectionComplex, isInGenPosition, isPacking, Stair } from './stairs';
 
 
 const OPACITY = 0.5;
@@ -23,9 +24,9 @@ function parseContent(text: string, scene: THREE.Scene){
             return parsedValue;
         })
     })
-    if (isValid == false){
-        return;
-    }
+    // if (isValid == false){
+    //     return;
+    // }
 
     if (lol.length %2 == 1){
         return;
@@ -153,6 +154,19 @@ function parseContent(text: string, scene: THREE.Scene){
 
         info.innerHTML += "is packing ? " + (isPack ? "OK" : "X") + "<br>";
 
+        const genPosErrors = isInGenPosition(stairs);
+        info.innerHTML += "is gen pos ? " + (typeof genPosErrors == "undefined" ? "OK": genPosErrors)  + "<br>";
+
+        const helly = isHelly(faces2);
+        let strHelly = "";
+        for (const v of helly){
+            strHelly += `${v} `
+        }
+        
+
+        info.innerHTML += "is Helly? " + (helly.size == 0 ? "OK": strHelly)  + "<br>";
+
+
 
         info.innerHTML += "contact dim ? " + (typeof contactProperty == "undefined" ? "OK" : contactProperty.toString())
         info.innerHTML += "<br>"
@@ -241,8 +255,6 @@ function setup(){
 4 1 1 1 3 1
 0 2 -1
 1 1 4 3 1 1
--2 -2 -2
-4 3.5 3 5 4 2 2 5 4 4 2 5 3 4 3.5 3.5 3 4
 1 1 1
 2 2 2
 -5 3 -4
